@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
-from flask import Flask
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
 @app.route('/sentione/lemmatize', methods=['POST'])
 def lemmatize():
-    return "LEMMATIZE"
+    return jsonify({'response': 'LEMMATIZE'})
 
 app.run()
