@@ -14,13 +14,13 @@ def before_first_request_f():
     _polem_enrich = polem_enrich.Polem_enrich()
 
 @app.route('/sentione/polem-enrich', methods=['POST'])
-def lemmatize():
+def enrich():
     if request.content_type != 'application/json':
         return "Invalid content type. Expecting application/json.", 415
 
-    j = request.get_json()
-    echo = _polem_enrich.echo(str(j))
-    js = json.loads('"' + echo + '"')
-    return jsonify(j)
+    response = _polem_enrich.enrich(json.dumps(request.get_json()))
+    response_json = json.loads(response)
+    return jsonify(response_json)
 
-app.run()
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
