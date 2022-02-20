@@ -82,6 +82,8 @@ RUN cmake .. && make && make install
 # 
 FROM polem-ol8 as sentione-ol8 
 
+RUN dnf update -y
+
 # nlohmann/JSON
 WORKDIR /build
 RUN git clone https://github.com/nlohmann/json.git
@@ -93,5 +95,12 @@ RUN pip3 install flask
 # my code
 RUN mkdir /build/sentione
 WORKDIR /build/sentione
+COPY polem_enrich/ polem_enrich/
+COPY rest-api/ rest-api/
 
+WORKDIR /build/sentione/polem_enrich
+RUN make && make move_files
+
+WORKDIR /build/sentione/rest-api
+CMD ["python3", "app.py"]
 
