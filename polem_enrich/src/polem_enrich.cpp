@@ -1,13 +1,12 @@
 #include <iostream>
 #include <string>
+#include <nlohmann/json.hpp>
 
 #include "polem_enrich.h"
 
-std::string Polem_enrich::echo(std::string input) {
-    return input;
-}
+std::string Polem_enrich::enrich(std::string input) {
 
-int Polem_enrich::five() {
-    return 5;
-}
+    json j = json::parse(input);
 
+    return to_string(j.at("docs"));
+}

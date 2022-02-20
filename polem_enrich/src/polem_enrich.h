@@ -2,11 +2,13 @@
 #define POLEM_ENRICH_H
 
 #include <string>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 class Polem_enrich {
     public:
-        std::string echo(std::string);
-        int five();
+        std::string enrich(std::string);
 };
 
 #endif
