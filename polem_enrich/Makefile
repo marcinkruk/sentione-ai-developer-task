@@ -17,6 +17,6 @@ python3_wrapper: src/polem_enrich.i
 	swig -c++ -python -py3 src/polem_enrich.i
 
 move_files:
-	cp src/polem_enrich.py ..
-	cp bin/_polem_enrich.so ..
+	cp src/polem_enrich.py ../rest-api/polem_enrich.py
+	cp bin/_polem_enrich.so ../rest-api/polem_enrich.py
 
