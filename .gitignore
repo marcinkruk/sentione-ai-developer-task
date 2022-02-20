@@ -1,5 +1,7 @@
 tags
-./polem_enrich/bin/
-./rest-api/__pycache__/
-./rest-api/polem_enrich.py
-./rest-api/_polem_enrich.so
+polem_enrich/bin/
+polem_enrich/src/polem_enrich.py
+polem_enrich/src/polem_enrich_wrap.cxx
+rest-api/__pycache__/
+rest-api/polem_enrich.py
+rest-api/_polem_enrich.so
