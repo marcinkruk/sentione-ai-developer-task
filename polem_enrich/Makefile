@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=--std=c++11 -Werror -Wextra -Wpedantic -Wconversion
+CXXFLAGS=--std=c++11 -Wall -Wextra -Wpedantic -Wconversion
 PYTHON3=/usr/include/python3.6m
 
 .default: shared_lib
