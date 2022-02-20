@@ -1,5 +1,5 @@
 tags
-./polem_enrich/bin/*
-./rest-api/__pycache__/*
+./polem_enrich/bin/
+./rest-api/__pycache__/
 ./rest-api/polem_enrich.py
 ./rest-api/_polem_enrich.so
