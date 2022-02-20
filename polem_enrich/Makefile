@@ -18,5 +18,5 @@ python3_wrapper: src/polem_enrich.i
 
 move_files:
 	cp src/polem_enrich.py ../rest-api/polem_enrich.py
-	cp bin/_polem_enrich.so ../rest-api/polem_enrich.py
+	cp bin/_polem_enrich.so ../rest-api/_polem_enrich.so
 
