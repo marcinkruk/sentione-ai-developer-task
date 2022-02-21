@@ -6,13 +6,6 @@ import polem_enrich
 
 app = Flask(__name__)
 
-_polem_enrich = None
-
-@app.before_first_request
-def before_first_request_f():
-    global _polem_enrich
-    _polem_enrich = polem_enrich.Polem_enrich()
-
 @app.route('/sentione/polem-enrich', methods=['POST'])
 def enrich():
     if request.content_type != 'application/json':
@@ -25,4 +18,6 @@ def enrich():
     return jsonify(response_json)
 
 if __name__ == "__main__":
+    global _polem_enrich
+    _polem_enrich = polem_enrich.Polem_enrich()
     app.run(host="0.0.0.0", port=5000)
