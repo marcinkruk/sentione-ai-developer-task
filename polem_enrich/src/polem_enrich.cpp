@@ -6,9 +6,22 @@
 
 std::string Polem_enrich::enrich(std::string input) {
 
-    json j_object = input_to_json(input);
+    auto j_object = input_to_json(input);
     if(j_object.empty())
         return "";
+
+    auto j_docs = j_object.at("docs");
+    for(auto doc : j_docs) {
+        std::cout << "\n\n=== DOC\n";  
+        auto j_labels = doc.at("labels");
+        for(auto label : j_labels) {
+            std::cout << "===== LABEL\n";
+            if(label.at("serviceName") == "NER") {
+                std::cout << "======= IS NER\n";
+                std::cout << std::setw(4) << label << "\n";
+            }
+        }
+    }
 
     return to_string(j_object);
 }
