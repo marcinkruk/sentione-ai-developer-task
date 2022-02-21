@@ -1,0 +1,221 @@
+{
+	"info": {
+		"_postman_id": "91da8a70-b57f-4197-94a9-498319e87ec7",
+		"name": "sentione/polem-enrich",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Request type validation",
+			"item": [
+				{
+					"name": "GET not accepted",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "PUT not accepted",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"PUT returns 405\", function () {",
+									"    pm.response.to.have.status(405);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/sentione/polem-enrich",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"sentione",
+								"polem-enrich"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE not accepted",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"DELETE returns 405\", function () {",
+									"    pm.response.to.have.status(405);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/sentione/polem-enrich",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"sentione",
+								"polem-enrich"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST not application/JSON",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Header-type not application/JSON returns 415\", function () {",
+									"    pm.response.to.have.status(415);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"It's not\": \"JSON\"\n}",
+							"options": {
+								"raw": {
+									"language": "html"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/sentione/polem-enrich",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"sentione",
+								"polem-enrich"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "JSON requests",
+			"item": [
+				{
+					"name": "Invalid request is refused",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Invalid request returns 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"It is\": \"JSON\",\n    \"but\": \"is invalid\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/sentione/polem-enrich",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"sentione",
+								"polem-enrich"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Valid request is accepted",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Returns 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Content-Type is present\", function () {",
+									"    pm.response.to.have.header(\"Content-Type\");",
+									"    pm.test(\"Content-Type header is application/json\", () => {",
+									"  pm.expect(pm.response.headers.get('Content-Type')).to.eql('application/json');",
+									"    });",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"docs\": [\n    {\n      \"labels\": [\n        {\n          \"end\": 37,\n          \"endToken\": 4,\n          \"fieldName\": \"namedEntityML\",\n          \"name\": \"sys.Organization\",\n          \"score\": 1.0,\n          \"serviceName\": \"NER\",\n          \"start\": 20,\n          \"startToken\": 3,\n          \"value\": \"Unii Europejskiej\"\n        },\n        {\n          \"end\": 37,\n          \"endToken\": 4,\n          \"fieldName\": \"namedEntityML\",\n          \"name\": \"sys.Localization\",\n          \"score\": 1.0,\n          \"serviceName\": \"NER\",\n          \"start\": 25,\n          \"startToken\": 4,\n          \"value\": \"Europejskiej\"\n        },\n        {\n          \"end\": 6,\n          \"endToken\": 0,\n          \"fieldName\": \"namedEntityML\",\n          \"name\": \"sys.Country\",\n          \"score\": 1.0,\n          \"serviceName\": \"NER\",\n          \"start\": 0,\n          \"startToken\": 0,\n          \"value\": \"Polska\"\n        },\n        {\n          \"end\": 6,\n          \"endToken\": 1,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 0,\n          \"startToken\": 0,\n          \"value\": [\n            \"polski\"\n          ]\n        },\n        {\n          \"end\": 6,\n          \"endToken\": 1,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 0,\n          \"startToken\": 0,\n          \"value\": \"adj:sg:nom:f:pos\"\n        },\n        {\n          \"end\": 16,\n          \"endToken\": 2,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 7,\n          \"startToken\": 1,\n          \"value\": [\n            \"dołączyć\"\n          ]\n        },\n        {\n          \"end\": 16,\n          \"endToken\": 2,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 7,\n          \"startToken\": 1,\n          \"value\": \"praet:sg:f:perf\"\n        },\n        {\n          \"end\": 19,\n          \"endToken\": 3,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 17,\n          \"startToken\": 2,\n          \"value\": [\n            \"do\"\n          ]\n        },\n        {\n          \"end\": 19,\n          \"endToken\": 3,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 17,\n          \"startToken\": 2,\n          \"value\": \"prep:gen\"\n        },\n        {\n          \"end\": 24,\n          \"endToken\": 4,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 20,\n          \"startToken\": 3,\n          \"value\": [\n            \"unia\"\n          ]\n        },\n        {\n          \"end\": 24,\n          \"endToken\": 4,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 20,\n          \"startToken\": 3,\n          \"value\": \"subst:sg:gen:f\"\n        },\n        {\n          \"end\": 37,\n          \"endToken\": 5,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 25,\n          \"startToken\": 4,\n          \"value\": [\n            \"europejski\"\n          ]\n        },\n        {\n          \"end\": 37,\n          \"endToken\": 5,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 25,\n          \"startToken\": 4,\n          \"value\": \"adj:sg:gen:f:pos\"\n        },\n        {\n          \"end\": 39,\n          \"endToken\": 6,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 38,\n          \"startToken\": 5,\n          \"value\": [\n            \"w\"\n          ]\n        },\n        {\n          \"end\": 39,\n          \"endToken\": 6,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 38,\n          \"startToken\": 5,\n          \"value\": \"prep:loc:nwok\"\n        },\n        {\n          \"end\": 44,\n          \"endToken\": 7,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 40,\n          \"startToken\": 6,\n          \"value\": [\n            \"2004\"\n          ]\n        },\n        {\n          \"end\": 44,\n          \"endToken\": 7,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 40,\n          \"startToken\": 6,\n          \"value\": \"adj:sg:loc:m3:pos\"\n        },\n        {\n          \"end\": 49,\n          \"endToken\": 8,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 45,\n          \"startToken\": 7,\n          \"value\": [\n            \"rok\"\n          ]\n        },\n        {\n          \"end\": 49,\n          \"endToken\": 8,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 45,\n          \"startToken\": 7,\n          \"value\": \"subst:sg:loc:m3\"\n        }\n      ],\n      \"raw\": \"Polska dołączyła do Unii Europejskiej w 2004 roku\",\n      \"tags\": [],\n      \"tokens\": [\n        {\n          \"end\": 6,\n          \"raw\": \"Polska\",\n          \"start\": 0\n        },\n        {\n          \"end\": 16,\n          \"raw\": \"dołączyła\",\n          \"start\": 7\n        },\n        {\n          \"end\": 19,\n          \"raw\": \"do\",\n          \"start\": 17\n        },\n        {\n          \"end\": 24,\n          \"raw\": \"Unii\",\n          \"start\": 20\n        },\n        {\n          \"end\": 37,\n          \"raw\": \"Europejskiej\",\n          \"start\": 25\n        },\n        {\n          \"end\": 39,\n          \"raw\": \"w\",\n          \"start\": 38\n        },\n        {\n          \"end\": 44,\n          \"raw\": \"2004\",\n          \"start\": 40\n        },\n        {\n          \"end\": 49,\n          \"raw\": \"roku\",\n          \"start\": 45\n        }\n      ]\n    },\n    {\n      \"labels\": [\n        {\n          \"end\": 25,\n          \"endToken\": 2,\n          \"fieldName\": \"namedEntityML\",\n          \"name\": \"sys.Localization\",\n          \"score\": 1.0,\n          \"serviceName\": \"NER\",\n          \"start\": 0,\n          \"startToken\": 0,\n          \"value\": \"Ulica Tadeusza Kościuszki\"\n        },\n        {\n          \"end\": 14,\n          \"endToken\": 1,\n          \"fieldName\": \"namedEntityML\",\n          \"name\": \"sys.Forename\",\n          \"score\": 1.0,\n          \"serviceName\": \"NER\",\n          \"start\": 6,\n          \"startToken\": 1,\n          \"value\": \"Tadeusza\"\n        },\n        {\n          \"end\": 25,\n          \"endToken\": 2,\n          \"fieldName\": \"namedEntityML\",\n          \"name\": \"sys.Surname\",\n          \"score\": 1.0,\n          \"serviceName\": \"NER\",\n          \"start\": 15,\n          \"startToken\": 2,\n          \"value\": \"Kościuszki\"\n        },\n        {\n          \"end\": 5,\n          \"endToken\": 1,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 0,\n          \"startToken\": 0,\n          \"value\": [\n            \"ulica\"\n          ]\n        },\n        {\n          \"end\": 5,\n          \"endToken\": 1,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 0,\n          \"startToken\": 0,\n          \"value\": \"subst:sg|nom|f\"\n        },\n        {\n          \"end\": 14,\n          \"endToken\": 2,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 6,\n          \"startToken\": 1,\n          \"value\": [\n            \"Tadeusz\"\n          ]\n        },\n        {\n          \"end\": 14,\n          \"endToken\": 2,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 6,\n          \"startToken\": 1,\n          \"value\": \"subst:sg|gen|m1\"\n        },\n        {\n          \"end\": 25,\n          \"endToken\": 3,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 15,\n          \"startToken\": 2,\n          \"value\": [\n            \"Kościuszko\"\n          ]\n        },\n        {\n          \"end\": 25,\n          \"endToken\": 3,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 15,\n          \"startToken\": 2,\n          \"value\": \"subst:sg|gen|m1\"\n        },\n        {\n          \"end\": 30,\n          \"endToken\": 4,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 26,\n          \"startToken\": 3,\n          \"value\": [\n            \"być\"\n          ]\n        },\n        {\n          \"end\": 30,\n          \"endToken\": 4,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 26,\n          \"startToken\": 3,\n          \"value\": \"fin:sg|ter|imperf\"\n        },\n        {\n          \"end\": 40,\n          \"endToken\": 5,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 31,\n          \"startToken\": 4,\n          \"value\": [\n            \"niedaleko\"\n          ]\n        },\n        {\n          \"end\": 40,\n          \"endToken\": 5,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 31,\n          \"startToken\": 4,\n          \"value\": \"prep:gen\"\n        }\n      ],\n      \"raw\": \"Ulica Tadeusza Kościuszki jest niedaleko\",\n      \"tags\": [],\n      \"tokens\": [\n        {\n          \"end\": 5,\n          \"raw\": \"Ulica\",\n          \"start\": 0\n        },\n        {\n          \"end\": 14,\n          \"raw\": \"Tadeusza\",\n          \"start\": 6\n        },\n        {\n          \"end\": 25,\n          \"raw\": \"Kościuszki\",\n          \"start\": 15\n        },\n        {\n          \"end\": 30,\n          \"raw\": \"jest\",\n          \"start\": 26\n        },\n        {\n          \"end\": 40,\n          \"raw\": \"niedaleko\",\n          \"start\": 31\n        }\n      ]\n    },\n    {\n      \"labels\": [\n        {\n          \"end\": 31,\n          \"endToken\": 4,\n          \"fieldName\": \"namedEntityML\",\n          \"name\": \"sys.Localization\",\n          \"score\": 1.0,\n          \"serviceName\": \"NER\",\n          \"start\": 15,\n          \"startToken\": 3,\n          \"value\": \"Placu Zbawiciela\"\n        },\n        {\n          \"end\": 7,\n          \"endToken\": 1,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 0,\n          \"startToken\": 0,\n          \"value\": [\n            \"widzieć\"\n          ]\n        },\n        {\n          \"end\": 7,\n          \"endToken\": 1,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 0,\n          \"startToken\": 0,\n          \"value\": \"fin:pl:pri:imperf\"\n        },\n        {\n          \"end\": 11,\n          \"endToken\": 2,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 8,\n          \"startToken\": 1,\n          \"value\": [\n            \"się\"\n          ]\n        },\n        {\n          \"end\": 11,\n          \"endToken\": 2,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 8,\n          \"startToken\": 1,\n          \"value\": \"qub:\"\n        },\n        {\n          \"end\": 14,\n          \"endToken\": 3,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 12,\n          \"startToken\": 2,\n          \"value\": [\n            \"na\"\n          ]\n        },\n        {\n          \"end\": 14,\n          \"endToken\": 3,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 12,\n          \"startToken\": 2,\n          \"value\": \"prep:loc\"\n        },\n        {\n          \"end\": 20,\n          \"endToken\": 4,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 15,\n          \"startToken\": 3,\n          \"value\": [\n            \"plac\"\n          ]\n        },\n        {\n          \"end\": 20,\n          \"endToken\": 4,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 15,\n          \"startToken\": 3,\n          \"value\": \"subst:sg:loc:m3\"\n        },\n        {\n          \"end\": 31,\n          \"endToken\": 5,\n          \"fieldName\": \"lemmas\",\n          \"name\": \"lemmas\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 21,\n          \"startToken\": 4,\n          \"value\": [\n            \"Zbawiciel\"\n          ]\n        },\n        {\n          \"end\": 31,\n          \"endToken\": 5,\n          \"fieldName\": \"posTag\",\n          \"name\": \"posTag\",\n          \"score\": 1,\n          \"serviceName\": \"tagger\",\n          \"start\": 21,\n          \"startToken\": 4,\n          \"value\": \"subst:sg:gen:m1\"\n        }\n      ],\n      \"raw\": \"Widzimy się na Placu Zbawiciela\",\n      \"tags\": [],\n      \"tokens\": [\n        {\n          \"end\": 7,\n          \"raw\": \"Widzimy\",\n          \"start\": 0\n        },\n        {\n          \"end\": 11,\n          \"raw\": \"się\",\n          \"start\": 8\n        },\n        {\n          \"end\": 14,\n          \"raw\": \"na\",\n          \"start\": 12\n        },\n        {\n          \"end\": 20,\n          \"raw\": \"Placu\",\n          \"start\": 15\n        },\n        {\n          \"end\": 31,\n          \"raw\": \"Zbawiciela\",\n          \"start\": 21\n        }\n      ]\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/sentione/polem-enrich",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"sentione",
+								"polem-enrich"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
