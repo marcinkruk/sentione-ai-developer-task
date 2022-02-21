@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <vector>
+
 #include <nlohmann/json.hpp>
 #include <polem-dev/CascadeLemmatizer.h>
 
@@ -47,22 +49,9 @@ json Polem_enrich::enrich_json(json input) {
         auto j_labels = doc.at("labels");
         for(auto label : j_labels) {
             if(label.at("serviceName") == "NER") {
-                Polem_query query{label.at("value")};
-
-                for(auto lab : j_labels) {
-                    if(lab.at("startToken") >= label.at("startToken")
-                            && lab.at("startToken") <= label.at("endToken")) {
-
-                        if(lab.at("fieldName") == "posTag") {
-                            query.add_tag(lab.at("value"));
-                        }
-
-                        if(lab.at("fieldName") == "lemmas") {
-                            query.add_lemma(lab.at("value")[0]);
-                        }
-                    }
-                }
-                std::cout << "************* " << query_lemmatizer(query) << "\n";
+                auto query = create_query(label, j_labels);
+                auto query_result = query_lemmatizer(query);
+                auto label_to_add = create_label(label, query_result);
             }
         }
     }
@@ -71,10 +60,49 @@ json Polem_enrich::enrich_json(json input) {
     return input;
 }
 
+Polem_query Polem_enrich::create_query(json ner_json, std::vector<json> j_labels) {
+    Polem_query query{ner_json.at("value")};
+
+    for(auto lab : j_labels) {
+        if(lab.at("startToken") >= ner_json.at("startToken")
+                && lab.at("startToken") <= ner_json.at("endToken")) {
+
+            if(lab.at("fieldName") == "posTag") {
+                query.add_tag(lab.at("value"));
+            }
+
+            if(lab.at("fieldName") == "lemmas") {
+                query.add_lemma(lab.at("value")[0]);
+            }
+        }
+    }
+
+    return query;
+}
+
 inline std::string Polem_enrich::query_lemmatizer(const Polem_query query) {
     return cascade_lemmatizer.lemmatizeS(
             query.get_orths(),
             query.get_lemmas(),
             query.get_tags(),
             false);
+}
+
+json Polem_enrich::create_label(json j_label, std::string value) {
+
+    std::cout << std::setw(4) << j_label << "\n\n";
+
+    json j_polem = R"(
+            {
+                "fieldName": "polem",
+                "name": "polem",
+                "serviceName": "polem"
+            }
+        )"_json;
+
+    j_label.update(j_polem);
+
+    std::cout << std::setw(4) << j_label << value << "\n";
+
+    return j_label;
 }

@@ -2,6 +2,8 @@
 #define POLEM_ENRICH_H
 
 #include <string>
+#include <vector>
+
 #include <nlohmann/json.hpp>
 #include <polem-dev/CascadeLemmatizer.h>
 
@@ -17,6 +19,8 @@ class Polem_enrich {
         json input_to_json(std::string);
         json empty_json();
         json enrich_json(json);
+        Polem_query create_query(json, std::vector<json>);
+        json create_label(json, std::string);
         std::string query_lemmatizer(const Polem_query);
 
         CascadeLemmatizer cascade_lemmatizer;
