@@ -19,6 +19,8 @@ def enrich():
         return "Invalid content type. Expecting application/json.", 415
 
     response = _polem_enrich.enrich(json.dumps(request.get_json()))
+    if response == "":
+        return "Invalid request.", 400
     response_json = json.loads(response)
     return jsonify(response_json)
 
