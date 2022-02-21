@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <iterator>
 
 #include <nlohmann/json.hpp>
 #include <polem-dev/CascadeLemmatizer.h>
@@ -45,15 +46,16 @@ inline json Polem_enrich::empty_json() {
 json Polem_enrich::enrich_json(json input) {
     auto j_docs = input.at("docs");
 
-    for(auto doc : j_docs) {
-        create_polem_labels(doc.at("labels"));
+    for(unsigned int i = 0; i < j_docs.size(); ++i) {
+        auto polem_labels = create_json_with_polem_labels(j_docs[i].at("labels"));
+        j_docs[i]["labels"] = polem_labels;
     }
 
-    // Do nothing for development
+    input["docs"] = j_docs;
     return input;
 }
 
-std::vector<json> Polem_enrich::create_polem_labels(std::vector<json> j_labels) {
+std::vector<json> Polem_enrich::create_json_with_polem_labels(std::vector<json> j_labels) {
     std::vector<json> polem_labels;
 
     for(auto label : j_labels) {
@@ -65,7 +67,10 @@ std::vector<json> Polem_enrich::create_polem_labels(std::vector<json> j_labels) 
         }
     }
 
-    j_labels.push_back(polem_labels);
+    j_labels.insert(
+        j_labels.end(),
+        std::make_move_iterator(polem_labels.begin()),
+        std::make_move_iterator(polem_labels.end()));
 
     return j_labels;
 }
@@ -110,6 +115,7 @@ inline std::string Polem_enrich::query_lemmatizer(const Polem_query query) {
 }
 
 json Polem_enrich::create_label(json j_label, std::string value) {
+    std::string s_value = "{\"value\": \"" + value + "\"}";
     json j_value = json::parse(s_value);
     json j_polem = R"(
             {

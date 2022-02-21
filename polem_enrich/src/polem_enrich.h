@@ -22,7 +22,7 @@ class Polem_enrich {
         Polem_query create_query(json, std::vector<json>);
         json create_label(json, std::string);
         std::string query_lemmatizer(const Polem_query);
-        std::vector<json> create_polem_labels(std::vector<json>);
+        std::vector<json> create_json_with_polem_labels(std::vector<json>);
 
         CascadeLemmatizer cascade_lemmatizer;
 };
