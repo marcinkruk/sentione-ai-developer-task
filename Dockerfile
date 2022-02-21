@@ -93,10 +93,14 @@ RUN cp -r /build/json/include/nlohmann/ /usr/include/
 RUN pip3 install flask
 
 # my code
+ENV LD_LIBRARY_PATH="/usr/include/:/usr/local/include/:/usr/local/lib/:${LD_LIBRARY_PATH}"
 RUN mkdir /build/sentione
 WORKDIR /build/sentione
 COPY polem_enrich/ polem_enrich/
 COPY rest-api/ rest-api/
+
+# TBC: a bug in polem install?
+RUN cp /build/Polem/polem/InflectionRule.h /usr/local/include/polem-dev/
 
 WORKDIR /build/sentione/polem_enrich
 RUN make && make move_files
