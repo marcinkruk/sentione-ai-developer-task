@@ -46,18 +46,28 @@ json Polem_enrich::enrich_json(json input) {
     auto j_docs = input.at("docs");
 
     for(auto doc : j_docs) {
-        auto j_labels = doc.at("labels");
-        for(auto label : j_labels) {
-            if(label.at("serviceName") == "NER") {
-                auto query = create_query(label, j_labels);
-                auto query_result = query_lemmatizer(query);
-                auto label_to_add = create_label(label, query_result);
-            }
-        }
+        create_polem_labels(doc.at("labels"));
     }
 
     // Do nothing for development
     return input;
+}
+
+std::vector<json> Polem_enrich::create_polem_labels(std::vector<json> j_labels) {
+    std::vector<json> polem_labels;
+
+    for(auto label : j_labels) {
+        if(label.at("serviceName") == "NER") {
+            auto query = create_query(label, j_labels);
+            auto query_result = query_lemmatizer(query);
+            auto label_to_add = create_label(label, query_result);
+            polem_labels.push_back(label_to_add);
+        }
+    }
+
+    j_labels.push_back(polem_labels);
+
+    return j_labels;
 }
 
 Polem_query Polem_enrich::create_query(json ner_json, std::vector<json> j_labels) {
@@ -81,17 +91,26 @@ Polem_query Polem_enrich::create_query(json ner_json, std::vector<json> j_labels
 }
 
 inline std::string Polem_enrich::query_lemmatizer(const Polem_query query) {
-    return cascade_lemmatizer.lemmatizeS(
+    /*
+     * THIS IS A PROPER CALL, YET RETURNS WRONG RESULT, WTF???
+     */
+
+    auto result = cascade_lemmatizer.lemmatizeS(
             query.get_orths(),
             query.get_lemmas(),
             query.get_tags(),
             false);
+    /*
+    std::cout << " Orths: " << query.get_orths() << "\n";
+    std::cout << "Lemmas: " << query.get_lemmas() << "\n";
+    std::cout << "  Tags: " << query.get_tags() << "\n";
+    std::cout << "Result: " << result << "\n\n";
+    */
+    return result;
 }
 
 json Polem_enrich::create_label(json j_label, std::string value) {
-
-    std::cout << std::setw(4) << j_label << "\n\n";
-
+    json j_value = json::parse(s_value);
     json j_polem = R"(
             {
                 "fieldName": "polem",
@@ -100,9 +119,8 @@ json Polem_enrich::create_label(json j_label, std::string value) {
             }
         )"_json;
 
+    j_label.update(j_value);
     j_label.update(j_polem);
-
-    std::cout << std::setw(4) << j_label << value << "\n";
 
     return j_label;
 }
