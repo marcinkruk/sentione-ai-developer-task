@@ -7,7 +7,7 @@
 
 Polem_enrich::Polem_enrich()
     : cascade_lemmatizer{CascadeLemmatizer::assembleLemmatizer()}
-    {}
+{}
 
 std::string Polem_enrich::enrich(std::string input) {
 
