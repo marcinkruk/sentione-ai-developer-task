@@ -1,8 +1,13 @@
 #include <iostream>
 #include <string>
 #include <nlohmann/json.hpp>
+#include <polem-dev/CascadeLemmatizer.h>
 
 #include "polem_enrich.h"
+
+Polem_enrich::Polem_enrich()
+    : cascade_lemmatizer{CascadeLemmatizer::assembleLemmatizer()}
+    {}
 
 std::string Polem_enrich::enrich(std::string input) {
 
