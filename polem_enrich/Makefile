@@ -1,14 +1,16 @@
 CXX=g++
 CXXFLAGS=--std=c++11 -Wall -Wextra -Wpedantic -Wconversion
+SRC=src/polem_enrich.cpp src/polem_enrich.h src/polem_query.cpp src/polem_query.h
 PYTHON3=/usr/include/python3.6m
 POLEM=/usr/local/include/polem-dev
 
 .default: shared_lib
 
 shared_lib: polem_enrich python3_polem_enrich
-	$(CXX) $(CXXFLAGS) -lpython3.6m -lpolem-dev -shared bin/polem_enrich.o bin/polem_enrich_wrap.o -o bin/_polem_enrich.so
+	$(CXX) $(CXXFLAGS) -lpython3.6m -lpolem-dev -shared bin/polem_enrich.o bin/polem_enrich_wrap.o bin/polem_query.o -o bin/_polem_enrich.so
 
-polem_enrich: src/polem_enrich.cpp src/polem_enrich.h
+polem_enrich: $(SRC)
+	$(CXX) $(CXXFLAGS) -fpic -c src/polem_query.cpp -o bin/polem_query.o
 	$(CXX) $(CXXFLAGS) -fpic -I$(POLEM) -c src/polem_enrich.cpp -o bin/polem_enrich.o
 
 python3_polem_enrich: python3_wrapper
