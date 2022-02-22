@@ -96,12 +96,22 @@ Polem_query Polem_enrich::create_query(json ner_json, std::vector<json> j_labels
 }
 
 inline std::string Polem_enrich::query_lemmatizer(const Polem_query query) {
+    /*
+     * THIS IS A PROPER CALL, YET RETURNS WRONG RESULT, WTF???
+     */
 
-    return cascade_lemmatizer.lemmatizeS(
+    auto result = cascade_lemmatizer.lemmatizeS(
             query.get_orths(),
             query.get_lemmas(),
             query.get_tags(),
             false);
+    /*
+    std::cout << " Orths: " << query.get_orths() << "\n";
+    std::cout << "Lemmas: " << query.get_lemmas() << "\n";
+    std::cout << "  Tags: " << query.get_tags() << "\n";
+    std::cout << "Result: " << result << "\n\n";
+    */
+    return result;
 }
 
 json Polem_enrich::create_label(json j_label, std::string value) {
@@ -119,16 +129,4 @@ json Polem_enrich::create_label(json j_label, std::string value) {
     j_label.update(j_polem);
 
     return j_label;
-}
-
-std::string trim(const std::string& str, const std::string& whitespace = " \t")
-{
-    const auto str_begin = str.find_first_not_of(whitespace);
-    if (str_begin == std::string::npos)
-        return ""; // no content
-
-    const auto str_end = str.find_last_not_of(whitespace);
-    const auto str_range = str_end - str_begin + 1;
-
-    return str.substr(str_begin, str_range);
 }
