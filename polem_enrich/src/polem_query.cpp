@@ -1,13 +1,16 @@
 
 #include <string>
 #include <vector>
+#include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/join.hpp>
 
 #include "polem_query.h"
 
 Polem_query::Polem_query(std::string orths)
     : orths{orths}
-{}
+{
+    boost::trim_right(orths);
+}
 
 void Polem_query::add_lemma(std::string lemma) {
     lemmas.push_back(std::move(lemma));
