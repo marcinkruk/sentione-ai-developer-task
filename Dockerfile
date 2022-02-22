@@ -1,10 +1,10 @@
 FROM oraclelinux:8 as polem-ol8
 
-RUN dnf upgrade && \
+RUN dnf upgrade -y && \
     dnf config-manager --set-enabled ol8_codeready_builder && \
     dnf install -y oracle-epel-release-el8
 
-RUN dnf upgrade && \
+RUN dnf upgrade -y && \
     dnf install -y \
         wget \
         tar \
